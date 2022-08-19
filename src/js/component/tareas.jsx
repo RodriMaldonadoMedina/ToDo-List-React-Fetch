@@ -20,12 +20,11 @@ const Tareas = ()=>{
     const eliminarTarea = (nombre) => {
         //nombre es el evento del onClick, por eso necesito hacer todo ese camino
         let tareaFiltrada = nombreTarea.filter(
-        (element) =>
-            element !== nombre.target.parentNode.parentNode.firstChild.innerHTML
-        );
+        (element) =>element !== nombre);
         setNombreTarea(tareaFiltrada);
     };
 
+    console.log(nombreTarea);
     return (
 
         /*
@@ -69,6 +68,7 @@ const Tareas = ()=>{
             nombre={element}
             clase="list-group-item misTareas d-flex justify-content-between"
             eliminarTarea={eliminarTarea}
+            indice={index}
           />
         ))}
         <li className="list-group-item text-center">

@@ -7,11 +7,8 @@ const Tareas = () => {
   const agregarTarea = (e) => {
     if (e.target.value.trim() && e.key === "Enter") {
       //setNombreTarea((prev)=>prev.concat(e.target.value))
-      setNombreTarea((prev) => [...prev, e.target.value]);
-      //lo necesito para limpiar el input por la asincronia
-      setTimeout(() => {
-        e.target.value = "";
-      }, 500);
+      setNombreTarea([...nombreTarea, e.target.value]);
+      e.target.value = "";
     }
   };
 
@@ -33,7 +30,7 @@ const Tareas = () => {
         console.log(resp.status); // el código de estado = 200 o código = 400 etc.
         console.log(resp.text()); // Intentará devolver el resultado exacto como cadena (string)
         console.log("Hay un error en el request");
-        return resp.json(); // (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
+        return resp;//.json(); // (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
       })
       .then((data) => {
         //Aquí es donde debe comenzar tu código después de que finalice la búsqueda

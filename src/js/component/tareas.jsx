@@ -12,9 +12,9 @@ const Tareas = () => {
     }
   };
 
-  const eliminarTarea = (nombre) => {
+  const eliminarTarea = (indice) => {
     //nombre es el evento del onClick, por eso necesito hacer todo ese camino
-    setNombreTarea(nombreTarea.filter((element) => element !== nombre));
+    setNombreTarea(nombreTarea.filter((elem, index) => index !== indice));
   };
 
   function functionFetch() {

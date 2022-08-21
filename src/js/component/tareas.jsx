@@ -52,6 +52,7 @@ const Tareas = () => {
       })
       .then((data) => {
         //Aquí es donde debe comenzar tu código después de que finalice la búsqueda
+        setNombreTarea([]);
         console.log(data, "estamos en el data del borrarUsuario"); //esto imprimirá en la consola el objeto exacto recibido del servidor
       })
       .catch((error) => {
@@ -76,7 +77,8 @@ const Tareas = () => {
           return resp.json();// (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
         })
         .then((data) => {
-          //Aquí es donde debe comenzar tu código después de que finalice la búsqueda
+          //                     Se puede usar otra conexion para actualizar el dom??????
+          getTareas();
           console.log(data, "estamos en el data de newUser"); //esto imprimirá en la consola el objeto exacto recibido del servidor
         })
         .catch((error) => {
@@ -145,13 +147,17 @@ const Tareas = () => {
     }
     return count;
   }
+
+  //seteo las tareas hechas en cada renderizacion
   tareasHechas = contarTareas();
+  console.log(nombreTarea)
 
   return (
     <div>
       <div className="row miInput my-3">
         <input
           type="text"
+          //no puedo agregar una tarea si el usuario no esta creado porque no me devuelve un arreglo de tareas en nombreTarea
           onKeyDown={(e) => agregarTarea(e)}
           className="col-12"
           placeholder="Ingrese la tarea a realizar"
@@ -170,7 +176,7 @@ const Tareas = () => {
             ))
           : null}
         <li className="list-group-item text-center">
-          {(nombreTarea.length - tareasHechas === 0)
+          {((!Array.isArray(nombreTarea)) || (nombreTarea.length - tareasHechas === 0))
             ? `No hay Tareas`
             : `cantidad de tareas de hoy : ${nombreTarea.length-tareasHechas}`}
         </li>
@@ -182,14 +188,14 @@ const Tareas = () => {
         <button className="btn btn-success me-3" onClick={() => actualizarServidorTareas(direccion)}>
           Guardar tareas
         </button>
-        <button className="btn btn-danger me-3" onClick={() => borrarUsuario(direccion)}>
-          Borrar usuario
+        <button className="btn btn-warning me-3" onClick={() => setNombreTarea([])}>  Borrar la lista de Tareas
         </button>
+        
       </div>
       <div className="mt-3">
         <input type="text" id="miInput" />
         <button
-          className="btn btn-warning mx-3"
+          className="btn btn-primary mx-3"
           onClick={() => {
             if (document.querySelector("#miInput").value.trim()) {
               direccion = "https://assets.breatheco.de/apis/fake/todos/user/" + document.querySelector("#miInput").value.trim();
@@ -201,6 +207,10 @@ const Tareas = () => {
         >
           Dar de alta al Usuario
         </button>
+        <button className="btn btn-danger my-3" onClick={() => borrarUsuario(direccion)}>
+          Borrar usuario y su lista de Tareas
+        </button>
+        
       </div>
     </div>
   );

@@ -145,6 +145,7 @@ const Tareas = () => {
     }
     return count;
   }
+  tareasHechas = contarTareas();
 
   return (
     <div>
@@ -169,10 +170,7 @@ const Tareas = () => {
             ))
           : null}
         <li className="list-group-item text-center">
-          {tareasHechas = contarTareas()}
-          {console.log(tareasHechas)}
-          {console.log(nombreTarea.length)}
-          {(tareasHechas === 0)
+          {(nombreTarea.length - tareasHechas === 0)
             ? `No hay Tareas`
             : `cantidad de tareas de hoy : ${nombreTarea.length-tareasHechas}`}
         </li>

@@ -23,3 +23,8 @@ body{
 .miTrash:hover{
     cursor: pointer;
 }
+
+.tachado{
+    text-decoration: line-through;
+    color:red;
+}

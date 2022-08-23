@@ -88,7 +88,6 @@ const Tareas = () => {
   }
 
   function getTareas() {
-    console.log()
     fetch("https://assets.breatheco.de/apis/fake/todos/user/kq", {
       method: "GET",
       headers: {

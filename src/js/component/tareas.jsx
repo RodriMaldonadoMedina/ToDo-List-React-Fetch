@@ -23,20 +23,6 @@ const Tareas = () => {
     setNombreTarea(nombreTareaABorrar);
   };
 
-  /* No logro hacer que ande el crear usuario con un arreglo vacio
-  const agregarNuevoUsuario = (user)=>{
-      fetch("https://assets.breatheco.de/apis/fake/todos/user/" + user.trim(),{  
-        method: "POST",
-        body : JSON.stringify([]),
-        headers: {
-          "Content-Type": "application/jason"          
-        },
-      })
-        .then(resp => {console.log(resp.status);})
-        .then(() => {})
-        .catch(error => {console.log(error)})
-  }*/
-
   const borrarUsuario = () => {
     fetch("https://assets.breatheco.de/apis/fake/todos/user/kq", {
       method: "DELETE",
@@ -53,7 +39,7 @@ const Tareas = () => {
       .then((data) => {
         //Aquí es donde debe comenzar tu código después de que finalice la búsqueda
         setNombreTarea([]);
-        console.log(data, "estamos en el data del borrarUsuario"); //esto imprimirá en la consola el objeto exacto recibido del servidor
+        //esto imprimirá en la consola el objeto exacto recibido del servidor
       })
       .catch((error) => {
         //manejo de errores
@@ -62,29 +48,30 @@ const Tareas = () => {
   };
 
   function newUser(direccion) {
-      console.log(direccion)
-      fetch(direccion, {
-        method: "POST",
-        body: JSON.stringify([{ label: "Primera Tarea", done: false },{ label:"Segunda Tarea", done:false}]),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    console.log(direccion);
+    fetch(direccion, {
+      method: "POST",
+      body: JSON.stringify([
+        { label: "Primera Tarea", done: false },
+        { label: "Segunda Tarea", done: false },
+      ]),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => {
+        console.log(resp.ok); // Será true (verdad) si la respuesta es exitosa.
+        console.log(resp.status); // el código de estado = 200 o código = 400 etc.
+        //console.log(resp.text()); // Intentará devolver el resultado exacto como cadena (string)
+        return resp.json(); // (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
       })
-        .then((resp) => {
-          console.log(resp.ok); // Será true (verdad) si la respuesta es exitosa.
-          console.log(resp.status); // el código de estado = 200 o código = 400 etc.
-          //console.log(resp.text()); // Intentará devolver el resultado exacto como cadena (string)
-          return resp.json();// (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
-        })
-        .then((data) => {
-          //                     Se puede usar otra conexion para actualizar el dom??????
-          getTareas();
-          console.log(data, "estamos en el data de newUser"); //esto imprimirá en la consola el objeto exacto recibido del servidor
-        })
-        .catch((error) => {
-          //manejo de errores
-          console.log(error);
-        });
+      .then((data) => {
+        getTareas();
+      })
+      .catch((error) => {
+        //manejo de errores
+        console.log(error);
+      });
   }
 
   function getTareas() {
@@ -101,9 +88,7 @@ const Tareas = () => {
         return resp.json(); // (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
       })
       .then((data) => {
-        //Aquí es donde debe comenzar tu código después de que finalice la búsqueda
         setNombreTarea(data);
-        //console.log(data,"estamos en el data del getTareas"); //esto imprimirá en la consola el objeto exacto recibido del servidor
       })
       .catch((error) => {
         //manejo de errores
@@ -126,7 +111,6 @@ const Tareas = () => {
         return resp.json(); // (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
       })
       .then((data) => {
-        //Aquí es donde debe comenzar tu código después de que finalice la búsqueda
         console.log(data, "estamos en el data del sendTareas"); //esto imprimirá en la consola el objeto exacto recibido del servidor
       })
       .catch((error) => {
@@ -134,22 +118,21 @@ const Tareas = () => {
         console.log(error);
       });
   }
+
   //contarTareas me da la cantidad de tareas que estan finalizadas, para poder mostrar las tareas que restan adecuadamente
-  const contarTareas = ()=>{
+  const contarTareas = () => {
     let count = 0;
-    if (Array.isArray(nombreTarea)){
-      nombreTarea.forEach((elemento)=>{
-        if (elemento.done) 
-          count++;
-          //console.log(elemento)
-        })
+    if (Array.isArray(nombreTarea)) {
+      nombreTarea.forEach((elemento) => {
+        if (elemento.done) count++;
+      });
     }
     return count;
-  }
+  };
 
   //seteo las tareas hechas en cada renderizacion
   tareasHechas = contarTareas();
-  console.log(nombreTarea)
+  console.log(nombreTarea);
 
   return (
     <div>
@@ -164,7 +147,7 @@ const Tareas = () => {
       </div>
 
       <ul className="list-group list-group-flush">
-        {(nombreTarea && nombreTarea.length > 0)
+        {nombreTarea && nombreTarea.length > 0
           ? nombreTarea.map((element, index) => (
               <Tarea
                 key={index}
@@ -175,21 +158,34 @@ const Tareas = () => {
             ))
           : null}
         <li className="list-group-item text-center">
-          {((!Array.isArray(nombreTarea)) || (nombreTarea.length - tareasHechas === 0))
+          {!Array.isArray(nombreTarea) ||
+          nombreTarea.length - tareasHechas === 0
             ? `No hay Tareas`
-            : `cantidad de tareas de hoy : ${nombreTarea.length-tareasHechas}`}
+            : `cantidad de tareas de hoy : ${
+                nombreTarea.length - tareasHechas
+              }`}
         </li>
       </ul>
       <div className="mt-3">
-        <button className="btn btn-secondary me-3" onClick={() => getTareas(direccion)}>
+        <button
+          className="btn btn-secondary me-3"
+          onClick={() => getTareas(direccion)}
+        >
           Recuperar tareas
         </button>
-        <button className="btn btn-success me-3" onClick={() => actualizarServidorTareas(direccion)}>
+        <button
+          className="btn btn-success me-3"
+          onClick={() => actualizarServidorTareas(direccion)}
+        >
           Guardar tareas
         </button>
-        <button className="btn btn-warning me-3" onClick={() => setNombreTarea([])}>  Borrar la lista de Tareas
+        <button
+          className="btn btn-warning me-3"
+          onClick={() => setNombreTarea([])}
+        >
+          {" "}
+          Borrar la lista de Tareas
         </button>
-        
       </div>
       <div className="mt-3">
         <input type="text" id="miInput" />
@@ -197,19 +193,22 @@ const Tareas = () => {
           className="btn btn-primary mx-3"
           onClick={() => {
             if (document.querySelector("#miInput").value.trim()) {
-              direccion = "https://assets.breatheco.de/apis/fake/todos/user/" + document.querySelector("#miInput").value.trim();
+              direccion =
+                "https://assets.breatheco.de/apis/fake/todos/user/" +
+                document.querySelector("#miInput").value.trim();
               newUser(direccion);
               document.querySelector("#miInput").value = "";
-            }
-            else alert("No puede crear un usuario vacio!")
+            } else alert("No puede crear un usuario vacio!");
           }}
         >
           Dar de alta al Usuario
         </button>
-        <button className="btn btn-danger my-3" onClick={() => borrarUsuario(direccion)}>
+        <button
+          className="btn btn-danger my-3"
+          onClick={() => borrarUsuario(direccion)}
+        >
           Borrar usuario y su lista de Tareas
         </button>
-        
       </div>
     </div>
   );
